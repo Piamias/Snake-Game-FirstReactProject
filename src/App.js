@@ -13,7 +13,10 @@ const getRandomCoordinates = () => {
   const initialState = {
 	food : getRandomCoordinates(),
 		direction : 'RIGHT',
-		speed : 150,
+		speed : 160,
+		play : false,
+		i : 1,
+		intervalId : -1,
 		snakeDots: [
 			[0,0],
 			[2,0],
@@ -22,7 +25,6 @@ const getRandomCoordinates = () => {
 }
 
 function Navbar() {
-	const [navbarOpen, setNavbarOpen] = React.useState(false);
 	return (
 	  <>
 		<nav className="relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
@@ -30,6 +32,7 @@ function Navbar() {
 			<div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
 			  <a
 				className="text-4xl font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-purple-600"
+				href='#Home'
 			  >
 				Snake Game
 			  </a>
@@ -47,7 +50,7 @@ function Navbar() {
 				<li className="nav-item">
 				  <a
 					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-purple-600 hover:text-white"
-					href="#info"
+					href="#Info"
 				  >
 					Info
 				  </a>
@@ -68,6 +71,20 @@ function Navbar() {
 	);
   }
 
+  function Waiting() {
+	return (
+		<>
+		<div className=" flex space-x-12 p-12 justify-center items-center">
+		<div className="h-48 flex items-center justify-center space-x-2 animate-pulse">
+		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
+		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
+		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
+		</div>
+		</div>
+		</>
+		)
+  }
+
 class App extends Component {
 
 	state = {
@@ -75,7 +92,10 @@ class App extends Component {
 		dark : true,
 		food : getRandomCoordinates(),
 		direction : 'RIGHT',
-		speed : 100,
+		speed : 160,
+		play : false,
+		i : 1,
+		intervalId : -1,
 		snakeDots: [
 			[0,0],
 			[2,0],
@@ -99,11 +119,21 @@ class App extends Component {
       		case 39:
         		this.setState({direction: 'RIGHT'});
         		break;
+			default:
+					break;
     		}
 	}
 
 	handleClick = () => {
-		this.setState(initialState)
+		if (!this.state.play) {
+
+			this.setState({
+				play : true,
+				i : 1
+			})
+		}
+		else 
+			this.setState({play : false})
 	}
 
 	moveSnake = () => {
@@ -121,6 +151,8 @@ class App extends Component {
 				break;
 			case 'UP':
 				head = [head[0], head[1] - 2];
+				break;
+			default:
 				break;
 		  }
 		dots.push(head);
@@ -142,7 +174,7 @@ class App extends Component {
 		let head = snake[snake.length - 1];
 		snake.pop();
 		snake.forEach(dot => {
-		  if (head[0] == dot[0] && head[1] == dot[1]) {
+		  if (head[0] === dot[0] && head[1] === dot[1]) {
 			this.onGameOver();
 		  }
 		})
@@ -151,7 +183,7 @@ class App extends Component {
 	checkIfEat() {
 		let head = this.state.snakeDots[this.state.snakeDots.length - 1];
 		let food = this.state.food;
-		if (head[0] == food[0] && head[1] == food[1]) {
+		if (head[0] === food[0] && head[1] === food[1]) {
 		  this.setState({
 			food: getRandomCoordinates()
 		  })
@@ -169,24 +201,30 @@ class App extends Component {
 	  }
 	
 	  increaseSpeed() {
-		if (this.state.speed > 10) {
+		if (this.state.speed > 20) {
 		  this.setState({
-			speed: this.state.speed - 10
+			speed: this.state.speed - 20
 		  })
+		  clearInterval(this.state.intervalId)
+		  this.setState({intervalId : setInterval(this.moveSnake, this.state.speed)})
 		}
 	  }
 
 	onGameOver() {
 		alert(`Game Over. Snake length is ${this.state.snakeDots.length}`);
+		clearInterval(this.state.intervalId)
 		this.setState(initialState)
 	}
 
-	componentDidMount() {
-		setInterval(this.moveSnake, this.state.speed)
-		document.onkeydown = this.onkeydown;
-	}
-
 	componentDidUpdate() {
+		
+		if (this.state.play && this.state.i === 1)	{
+			this.setState({intervalId : setInterval(this.moveSnake, this.state.speed)})
+			document.onkeydown = this.onkeydown;
+			this.setState({i : 0})
+		}
+		if (!this.state.play)
+			clearInterval(this.state.intervalId)
 		this.checkIfOutOfBorders()
 		this.checkIfCollapsed()
 		this.checkIfEat()
@@ -195,34 +233,33 @@ class App extends Component {
 	render() {
 		return (
 		<>
-		<title>SkyPong</title>
+		<title>SnakeGame</title>
 		<div className='flex flex-col h-screen my-auto bg-cover bg-gradient-to-b from-neutral-900 to-neutral-900 "'>
 			<Navbar/>
 		  	<div className="game-area">
 			<Snake snakeDots={this.state.snakeDots}/>
+			<div>{!this.state.play && this.state.i === 0 ? <Waiting/> : ''}</div>
 			<Food dot={this.state.food}/>
 			</div>
 			<div className="flex items-center justify-center">
 			<div className="">
 			<div className="flex p-2 w-full justify-center space-x-10"></div>
-			<div class="flex w-full justify-center space-x-0">
-    			<button class="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-l-full hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
+			<div className="flex w-full justify-center space-x-0">
+    			<button className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-l-full hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
       				Leaderboard
     			</button>
-    			<button class="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-none hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
-      				Play
+    			<button 
+					className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-none hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out"
+					onClick={this.handleClick}
+					>
+					<b>{this.state.play ? 'Pause' : 'Play'}</b>
     			</button>
-    			<button class="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-r-full hover:bg-white text-white hover:text-purple-600 font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+    			<button className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-r-full hover:bg-white text-white hover:text-purple-600 font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
       				Friend List
     			</button>
  			</div>
-			<div className="flex h-28 items-center justify-center">
-				<button 
-					className="min-w-auto w-14 h-14 bg-purple-600 p-2 rounded-full hover:bg-white text-white hover:text-purple-600 font-semibold transition-rotation duration-300 hover:rotate-90 ease-in-out"
-					onClick={this.handleClick}
-				>
-      				Reset
-				</button>
+			<div className="h-8 flex flex-col space-x-12 space-y-6 p-20 justify-center items-center">
+    			<b className="font-bold text-purple-600 animate-ping">{this.state.speed === 20 && 'SPEED MAX!'}</b>
 			</div>
 			</div>
 			</div>

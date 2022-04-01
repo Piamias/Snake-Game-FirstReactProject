@@ -4,9 +4,9 @@
 
 .game-area {
 	position: relative;
-	margin: 100px auto;
-	width: 500px;
-	height: 500px;
+	margin: 50px auto;
+	width: 600px;
+	height: 600px;
 	border: 2px solid #9333EA;
   }
   
