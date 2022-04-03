@@ -15,6 +15,7 @@ const getRandomCoordinates = () => {
 		direction : 'RIGHT',
 		speed : 160,
 		play : false,
+		score : 0,
 		i : 1,
 		intervalId : -1,
 		snakeDots: [
@@ -27,11 +28,11 @@ const getRandomCoordinates = () => {
 function Navbar() {
 	return (
 	  <>
-		<nav className="relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
+		<nav className="bg-purple-600 relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
 		  <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
 			<div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
 			  <a
-				className="text-4xl font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-purple-600"
+				className="text-4xl font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
 				href='#Home'
 			  >
 				Snake Game
@@ -41,7 +42,7 @@ function Navbar() {
 			  <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
 				<li className="nav-item">
 				  <a
-					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-purple-600 hover:text-white"
+					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:text-opacity-75"
 					href="https://github.com/Piamias"
 				  >
 					  Code Sources
@@ -49,7 +50,7 @@ function Navbar() {
 				</li>
 				<li className="nav-item">
 				  <a
-					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-purple-600 hover:text-white"
+					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:text-opacity-75"
 					href="#Info"
 				  >
 					Info
@@ -57,7 +58,7 @@ function Navbar() {
 				</li>
 				<li className="nav-item">
 				  <a
-					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-purple-600 hover:text-white"
+					className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:text-opacity-75"
 					href="#Contact"
 				  >
 					Contact
@@ -92,8 +93,9 @@ class App extends Component {
 		dark : true,
 		food : getRandomCoordinates(),
 		direction : 'RIGHT',
-		speed : 160,
+		speed : 200,
 		play : false,
+		score : 0,
 		i : 1,
 		intervalId : -1,
 		snakeDots: [
@@ -214,6 +216,7 @@ class App extends Component {
 		alert(`Game Over. Snake length is ${this.state.snakeDots.length}`);
 		clearInterval(this.state.intervalId)
 		this.setState(initialState)
+		this.setState({score : this.state.snakeDots.length})
 	}
 
 	componentDidUpdate() {
@@ -236,6 +239,8 @@ class App extends Component {
 		<title>SnakeGame</title>
 		<div className='flex flex-col h-screen my-auto bg-cover bg-gradient-to-b from-neutral-900 to-neutral-900 "'>
 			<Navbar/>
+			{/* <div className=" flex flex-col justify-center items-center">
+    			<b className="font-bold text-purple-600 animate-ping">{this.state.speed === 20 && 'SPEED MAX!'}</b> */}
 		  	<div className="game-area">
 			<Snake snakeDots={this.state.snakeDots}/>
 			<div>{!this.state.play && this.state.i === 0 ? <Waiting/> : ''}</div>
@@ -258,12 +263,13 @@ class App extends Component {
       				Friend List
     			</button>
  			</div>
-			<div className="h-8 flex flex-col space-x-12 space-y-6 p-20 justify-center items-center">
-    			<b className="font-bold text-purple-600 animate-ping">{this.state.speed === 20 && 'SPEED MAX!'}</b>
+			 <div className="flex items-center justify-center h-24 text-purple-600 p-2 rounded-l-full font-semibold tracking-widest">
+				  MaxScore : {this.state.score}
 			</div>
 			</div>
 			</div>
 			</div>
+			{/* </div> */}
 		</>
 		);
 	  }
