@@ -25,10 +25,22 @@ const getRandomCoordinates = () => {
 		]
 }
 
+function Background() {
+	return (
+		<div className='ripple-background'>
+  		<div className='circle xxlarge shade1'></div>
+  		<div className='circle xlarge shade2'></div>
+  		<div className='circle large shade3'></div>
+  		<div className='circle mediun shade4'></div>
+  		<div className='circle small shade5'></div>
+		</div>
+	)
+}
+
 function Navbar() {
 	return (
 	  <>
-		<nav className="bg-purple-600 relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
+		<nav className="bg-yellow-600 relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
 		  <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
 			<div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
 			  <a
@@ -38,6 +50,7 @@ function Navbar() {
 				Snake Game
 			  </a>
 			</div>
+			<img className="h-20 w-20 self-center" src="https://images.emojiterra.com/google/android-11/512px/1f40d.png" alt=""/>
 			<div>
 			  <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
 				<li className="nav-item">
@@ -77,9 +90,9 @@ function Navbar() {
 		<>
 		<div className=" flex space-x-12 p-12 justify-center items-center">
 		<div className="h-48 flex items-center justify-center space-x-2 animate-pulse">
-		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
-		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
-		<div className="w-8 h-8 bg-purple-600 rounded-full"></div>
+		<div className="w-8 h-8 bg-yellow-600 rounded-full"></div>
+		<div className="w-8 h-8 bg-yellow-600 rounded-full"></div>
+		<div className="w-8 h-8 bg-yellow-600 rounded-full"></div>
 		</div>
 		</div>
 		</>
@@ -237,7 +250,7 @@ class App extends Component {
 		return (
 		<>
 		<title>SnakeGame</title>
-		<div className='flex flex-col h-screen my-auto bg-cover bg-gradient-to-b from-neutral-900 to-neutral-900 "'>
+		<div className='flex flex-col h-screen my-auto bg-cover bg-gradient-to-b from-neutral-200 to-neutral-200 "'>
 			<Navbar/>
 			{/* <div className=" flex flex-col justify-center items-center">
     			<b className="font-bold text-purple-600 animate-ping">{this.state.speed === 20 && 'SPEED MAX!'}</b> */}
@@ -246,24 +259,25 @@ class App extends Component {
 			<div>{!this.state.play && this.state.i === 0 ? <Waiting/> : ''}</div>
 			<Food dot={this.state.food}/>
 			</div>
+			<Background/>
 			<div className="flex items-center justify-center">
 			<div className="">
 			<div className="flex p-2 w-full justify-center space-x-10"></div>
 			<div className="flex w-full justify-center space-x-0">
-    			<button className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-l-full hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
+    			<button className="min-w-auto w-32 h-10 bg-yellow-600 p-2 rounded-l-full hover:bg-white text-white hover:text-yellow-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
       				Leaderboard
     			</button>
     			<button 
-					className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-none hover:bg-white text-white hover:text-purple-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out"
+					className="min-w-auto w-32 h-10 bg-yellow-600 p-2 rounded-none hover:bg-white text-white hover:text-yellow-600 font-semibold  hover:flex-grow transition-all duration-200 ease-in-out"
 					onClick={this.handleClick}
 					>
 					<b>{this.state.play ? 'Pause' : 'Play'}</b>
     			</button>
-    			<button className="min-w-auto w-32 h-10 bg-purple-600 p-2 rounded-r-full hover:bg-white text-white hover:text-purple-600 font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+    			<button className="min-w-auto w-32 h-10 bg-yellow-600 p-2 rounded-r-full hover:bg-white text-white hover:text-yellow-600 font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
       				Friend List
     			</button>
  			</div>
-			 <div className="flex items-center justify-center h-24 text-purple-600 p-2 rounded-l-full font-semibold tracking-widest">
+			 <div className="flex items-center justify-center h-24 text-yellow-600 p-2 rounded-l-full font-semibold tracking-widest">
 				  MaxScore : {this.state.score}
 			</div>
 			</div>
